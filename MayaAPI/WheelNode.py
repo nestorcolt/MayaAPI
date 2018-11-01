@@ -36,7 +36,7 @@ class WheelNode(mpx.MPxNode):
             #
             dataHandleRotate = dataBlock.outputValue(WheelNode.outRotate)
             dataHandleRotate.setFloat(self.outRotate)
-            dataBlock.setClean()
+            dataBlock.setClean(plug)
 
         else:
             return om.kUnknownParameter
@@ -62,7 +62,7 @@ def nodeInitializer():
     MFnAttr.setStorable(1)
     MFnAttr.setKeyable(1)
     #
-    WheelNode.outRotate = MFnAttr.create("rotate", "r", om.MFnNumericData.kFloat)
+    WheelNode.outRotate = MFnAttr.create("rotate", "rot", om.MFnNumericData.kFloat)
     MFnAttr.setReadable(1)
     MFnAttr.setWritable(0)
     MFnAttr.setStorable(0)
