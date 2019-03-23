@@ -2,7 +2,9 @@ from contextlib import  contextmanager
 import maya.OpenMaya as om
 import maya.OpenMayaAnim as aom
 import time
-
+########################
+# API 2017 C ++
+"https://help.autodesk.com/view/MAYAUL/2017/ENU/?guid=__cpp_ref_classes_html"
 ######################################################################################################
 @contextmanager
 def benchmark():
