@@ -42,7 +42,7 @@ def get_componets(deformer):
     dag_path_members = om.MDagPath()
     mo_set_components = om.MObject()
     members.getDagPath(0, dag_path_members, mo_set_components)
-    return dag_path_members, mo_set_components
+    return mo_set_components
 
 ######################################################################################################
 
@@ -61,28 +61,16 @@ def get_deformer_weights(deformer):
 def set_skin_weights(skin, weights, target):
     Inlfuences_count = 2
     mfn_skin = aom.MFnSkinCluster(getMObject(skin))
-    _, components = get_componets(mfn_skin)
+    components = get_componets(mfn_skin)
     doubleArrayFromFloat = om.MDoubleArray()
     doubleArrayFromFloat.setLength(weights.length() * Inlfuences_count)
-    #
-    idx = 0
-    is_done = False
-    iterator = iter(weights)
-    #
-    while not is_done:
-        try:
-            weight = next(iterator)
-            inverse_weight = 1.0 - weight
-            next_idx = idx + 1
-            doubleArrayFromFloat.set(weight, idx)
-            doubleArrayFromFloat.set(inverse_weight, next_idx)
-            idx += Inlfuences_count
-
-        except StopIteration:
-            is_done = True
-    #
     InfArray = om.MIntArray(Inlfuences_count,0)
     [InfArray.set(idx, idx) for idx in  range(Inlfuences_count)]
+
+    # flatten the weights in one list calculating the inverse normalized weight from each weight in weights
+    flattened_weights = [y for x in [[weight, 1.0 - weight] for weight in weights] for y in x]
+    [doubleArrayFromFloat.set(weight, index) for index, weight in enumerate(flattened_weights)]
+    # Set weights
     mfn_skin.setWeights(getDag(target), components , InfArray, doubleArrayFromFloat, False)
 
 ######################################################################################################
